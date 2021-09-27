@@ -1,2 +1,2 @@
 # Control System
-Software that is used to control the robot externally.
+Control loops that monitor and manage the robot
