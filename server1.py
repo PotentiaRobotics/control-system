@@ -1,23 +1,26 @@
 import socket
 
-def Main():
-   
-    host = "10.235.1.101"
-    port = 4000
-    print(host)
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind((host, port))
+HOST = '10.235.1.146' # Server IP or Hostname
+PORT = 12345 # Pick an open Port (1000+ recommended), must match the client sport
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+print('Socket created')
 
-    print("Server Started")
-    while True:
-        data, addr = s.recvfrom(1024)
-        data = data.decode('utf-8')
-        print("Message from: " + str(addr))
-        print("From connected user: " + data)
-        data = data.upper()
-        print("Sending: " + data)
-        s.sendto(data.encode('utf-8'), addr)
-    c.close()
+#managing error exception
+try:
+	s.bind((HOST, PORT))
+except socket.error:
+    print ('Bind failed ')
 
-if __name__=='__main__':
-    Main()
+s.listen(5)
+print ('Socket awaiting messages')
+(conn, addr) = s.accept()
+print ('Connected')
+
+# awaiting for message
+while True:
+	data = conn.recv(1024)
+	print (data)
+
+	# # Sending reply
+	conn.send(data+bytes(" works",'utf-8'))
+	# conn.close() # Close connections
