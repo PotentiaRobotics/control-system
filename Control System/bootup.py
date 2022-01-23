@@ -4,6 +4,9 @@
 # 1 for reading sensor data
 # Updates sensor data through wifi and propiosense system
 # 1 for executing the first action in the priority queue
+
+from Propioception import *
+
 import threading
 import socket
 import heapq
@@ -54,16 +57,14 @@ class Receiver:
       print("Inside execute",self.actions)
 
   def sensorData(self):
-    print("Test")
+    # Test
+    # Read from Arduinos to know what motors and sensors there are
 
   def runSimul(self):
     threading.Thread(target=self.priorityQueue).start()
     threading.Thread(target=self.execute()).start()
     threading.Thread(target=self.sensorData()).start()
 
-def main():
+def startBoot():
   simulation = Receiver('10.235.1.127',12345)
   simulation.runSimul()
-
-if __name__ == "__main__":
-  main()

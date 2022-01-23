@@ -132,78 +132,78 @@ class Propioception:
             return 1
         
 
-# Test
-stuff = Propioception(
-        left_hip_pitch= 0,
-        left_hip_yaw= 0,
-        left_hip_roll= 0,
-        left_knee_pitch= 0,
-        left_ankle_pitch= 0,
-        left_ankle_yaw= 0,
-        left_ankle_roll= 0,
-        right_hip_pitch= 0,
-        right_hip_yaw= 0,
-        right_hip_roll= 0,
-        right_knee_pitch= 0,
-        right_ankle_pitch= 0,
-        right_ankle_yaw= 0,
-        right_ankle_roll= 0,
-        left_shoulder_pitch= 0,
-        left_shoulder_yaw= 0,
-        left_shoulder_roll= 0,
-        left_elbow_pitch= 0,
-        right_shoulder_pitch= 0,
-        right_shoulder_yaw= 0,
-        right_shoulder_roll= 0,
-        right_elbow_pitch= 0,
-        torso_pitch= 0,
-        torso_yaw= 0,
-        torso_roll= 0,
-        neck_pitch= 0,
-        neck_yaw= 0,
-        neck_roll= 0
-        )
+# # Test
+# stuff = Propioception(
+#         left_hip_pitch= 0,
+#         left_hip_yaw= 0,
+#         left_hip_roll= 0,
+#         left_knee_pitch= 0,
+#         left_ankle_pitch= 0,
+#         left_ankle_yaw= 0,
+#         left_ankle_roll= 0,
+#         right_hip_pitch= 0,
+#         right_hip_yaw= 0,
+#         right_hip_roll= 0,
+#         right_knee_pitch= 0,
+#         right_ankle_pitch= 0,
+#         right_ankle_yaw= 0,
+#         right_ankle_roll= 0,
+#         left_shoulder_pitch= 0,
+#         left_shoulder_yaw= 0,
+#         left_shoulder_roll= 0,
+#         left_elbow_pitch= 0,
+#         right_shoulder_pitch= 0,
+#         right_shoulder_yaw= 0,
+#         right_shoulder_roll= 0,
+#         right_elbow_pitch= 0,
+#         torso_pitch= 0,
+#         torso_yaw= 0,
+#         torso_roll= 0,
+#         neck_pitch= 0,
+#         neck_yaw= 0,
+#         neck_roll= 0
+#         )
         
-"""Update cases"""
-# Success case
-print(stuff.data['neck_roll'])        
-stuff.update({'neck_roll': 21})
-print(stuff.data['neck_roll'])
+# """Update cases"""
+# # Success case
+# print(stuff.data['neck_roll'])        
+# stuff.update({'neck_roll': 21})
+# print(stuff.data['neck_roll'])
 
-# -1 case
-print(stuff.update(None))
-
-# -2 case
-print(stuff.update([]))
-
-# -3 case
-print(stuff.update({'test': 21}))
-
-"""Remove cases"""
-# Success case
-print(stuff.data['neck_roll'])        
-print(stuff.remove(['neck_roll']))
-
-# -1 case
-print(stuff.remove(None))
+# # -1 case
+# print(stuff.update(None))
 
 # # -2 case
-print(stuff.remove({}))
+# print(stuff.update([]))
 
-# -3 case
-print(stuff.remove(['test']))
+# # -3 case
+# print(stuff.update({'test': 21}))
 
-"""Add cases"""
-# Success case
-print('test' in stuff.data.keys())        
-stuff.add({'test': 21})
-print(stuff.data['test'])
+# """Remove cases"""
+# # Success case
+# print(stuff.data['neck_roll'])        
+# print(stuff.remove(['neck_roll']))
 
-# -1 case
-print(stuff.add(None))
+# # -1 case
+# print(stuff.remove(None))
 
-# -2 case
-print(stuff.add([]))
+# # # -2 case
+# print(stuff.remove({}))
 
-# -3 case
-print(stuff.add({'test': 21}))
+# # -3 case
+# print(stuff.remove(['test']))
+
+# """Add cases"""
+# # Success case
+# print('test' in stuff.data.keys())        
+# stuff.add({'test': 21})
+# print(stuff.data['test'])
+
+# # -1 case
+# print(stuff.add(None))
+
+# # -2 case
+# print(stuff.add([]))
+
+# # -3 case
+# print(stuff.add({'test': 21}))
