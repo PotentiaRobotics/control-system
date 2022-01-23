@@ -59,6 +59,8 @@ class Receiver:
   def sensorData(self):
     # Test
     # Read from Arduinos to know what motors and sensors there are
+    print("test")
+    
 
   def runSimul(self):
     threading.Thread(target=self.priorityQueue).start()
