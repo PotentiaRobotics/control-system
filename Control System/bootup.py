@@ -6,11 +6,13 @@
 # 1 for executing the first action in the priority queue
 
 from Propioception import *
+from commands import *
 
 import threading
 import socket
 import heapq
 import time
+import serial
 
 class Receiver:
   def __init__(self, host, port):
@@ -42,31 +44,46 @@ class Receiver:
       if "Password" in action:
         heapq.heappush(self.actions,action)
         print(self.actions)
+        conn.send(action.encode()+bytes(" works",'utf-8'))
       else:
         print("Incorrect Command")
+        conn.send(bytes("Incorrect Commandc",'utf-8'))
 
       # Sending reply
-      conn.send(action.encode()+bytes(" works",'utf-8'))
+      
 
   def execute(self):
     while len(self.actions) > 0:
       if self.timer == 0:
-        print("Executed: ", heapq.heappop(self.actions))
+        command = heapq.heappop(self.actions)
+        if command == "Password A_on_LED":
+          if onAndOfffLed():
+            print("Executed: ", command)
+          else:
+            print("Did not execute correctly ", command)
+        
         time.sleep(5)
-        heapq.heappush(self.actions, "Password Balancing")
+        if "Password Balancing" not in self.actions:
+          heapq.heappush(self.actions, "Password Balancing")
       print("Inside execute",self.actions)
 
   def sensorData(self):
     # Test
-    # Read from Arduinos to know what motors and sensors there are
-    print("test")
-    
+    print("Inside")
+    ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+    ser.reset_input_buffer()
+    while True:
+      print("Inside data")
+      # Read from Arduinos to know what motors and sensors there are
+      ser.write("Send ****s plz\n".encode('utf-8'))
+      line = ser.readline().decode('utf-8').rstrip()
+      print(line)
 
   def runSimul(self):
     threading.Thread(target=self.priorityQueue).start()
-    threading.Thread(target=self.execute()).start()
-    threading.Thread(target=self.sensorData()).start()
+    threading.Thread(target=self.execute).start()
+    threading.Thread(target=self.sensorData).start()
 
 def startBoot():
-  simulation = Receiver('10.235.1.127',12345)
+  simulation = Receiver('10.235.1.148',12345)
   simulation.runSimul()
