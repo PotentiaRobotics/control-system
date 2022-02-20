@@ -43,22 +43,22 @@ class Receiver:
     # Commands must be in form "PRIORITY|{COMMAND}|TIMESTAMP|CHECKSUM"
     # awaiting for message
     while True:
-      instruction = self.conn.recv(1024)
-      action = instruction.decode('UTF-8')
-      print("Action received:", action)
-      heapq.heappush(self.commands,action)
-      heapq.heappush(self.transmit,"Received|"+action)
+      action = self.conn.recv(1024).decode('UTF-8')
+      if len(action) > 0:
+        heapq.heappush(self.commands,action)
+        heapq.heappush(self.transmit,"Received|"+action)
           
+  """Method checks commands from queue and adds to execution queue"""
   def checkCommand(self):
     while True:
       if len(self.commands) > 0:
         #checking if the checksum of the command
         #equals the sum of all ascii values of every character 
         #in command statement
-        pattern = "^[0-5]\|.*\|[0-9]{2}:[0-9]{2}\|"
-        checksum = "\w+$"
-        popped = commands.heappop()
-        com = re.findall(pattern, popped)
+        pattern = "^[0-5]\|.*\|[0-9]{2}:[0-9]{2}\|" #everything but the checksum value
+        checksum = "\w+$" #checksum value
+        popped = heapq.heapop(self.commands) #gets smallest value command
+        com = re.findall(pattern, popped) 
         numval = re.findall(checksum, popped)
         numval = int(numval,16) #converts hex to int
         if numval == sum([ord(i) for i in com[0]]):
