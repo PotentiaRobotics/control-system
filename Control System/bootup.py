@@ -8,6 +8,7 @@
 from Propioception import *
 from commands import *
 
+import re
 import threading
 import socket
 import heapq
@@ -16,15 +17,16 @@ import serial
 
 class Receiver:
   def __init__(self, host, port):
-    self.actions = ["Password L"]
+    self.commands = [""]
+    self.execute = [""]
+    self.transmit = [""]
     self.timer = 0
     self.HOST = host
     self.PORT = port
 
-  def priorityQueue(self):
+    #connecting using scokets
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print('Socket created')
-
     #managing error exception
     try:
       s.bind((self.HOST, self.PORT))
@@ -32,25 +34,43 @@ class Receiver:
         print ('Bind failed ')
 
     s.listen(5)
-    print ('Socket awaiting messages')
-    (conn, addr) = s.accept()
-    print ('Connected')
-
+    print('Socket awaiting messages')
+    (self.conn, addr) = s.accept()
+    print('Connected')
+  
+  """Method receives commands from client and add to queue"""
+  def telemetryReceive(self):
+    # Commands must be in form "PRIORITY|{COMMAND}|TIMESTAMP|CHECKSUM"
     # awaiting for message
     while True:
-      instruction = conn.recv(1024)
+      instruction = self.conn.recv(1024)
       action = instruction.decode('UTF-8')
       print("Action received:", action)
-      if "Password" in action:
-        heapq.heappush(self.actions,action)
-        print(self.actions)
-        conn.send(action.encode()+bytes(" works",'utf-8'))
-      else:
-        print("Incorrect Command")
-        conn.send(bytes("Incorrect Commandc",'utf-8'))
-
-      # Sending reply
-      
+      heapq.heappush(self.commands,action)
+      heapq.heappush(self.transmit,"Received|"+action)
+          
+  def checkCommand(self):
+    while True:
+      if len(self.commands) > 0:
+        #checking if the checksum of the command
+        #equals the sum of all ascii values of every character 
+        #in command statement
+        pattern = "^[0-5]\|.*\|[0-9]{2}:[0-9]{2}\|"
+        checksum = "\w+$"
+        popped = commands.heappop()
+        com = re.findall(pattern, popped)
+        numval = re.findall(checksum, popped)
+        numval = int(numval,16) #converts hex to int
+        if numval == sum([ord(i) for i in com[0]]):
+          heapq.heappush(self.transmit, "Correct|"+popped)
+          heapq.heappush(self.execute, popped)
+        else: 
+          heappq.heappush(self.transmit, "Incorrect|"+popped)
+        
+  def telemetryTransmit(self):
+    while True:
+      if len(self.transmit) > 0:
+        self.conn.send((heapq.heappop(self.transmit)).encode())    
 
   def execute(self):
     while len(self.actions) > 0:
@@ -67,6 +87,15 @@ class Receiver:
           heapq.heappush(self.actions, "Password Balancing")
       print("Inside execute",self.actions)
 
+  def balance(self):
+    print("Nothing")
+
+  def gaitGen(self):
+    print("Nothing")
+
+  def computerVision(self):
+    print("Nothing")
+
   def sensorData(self):
     # Test
     print("Inside")
@@ -80,9 +109,16 @@ class Receiver:
       print(line)
 
   def runSimul(self):
-    threading.Thread(target=self.priorityQueue).start()
+    threading.Thread(target=self.telemetryReceive).start()
+    threading.Thread(target=self.checkCommand).start()
+    threading.Thread(target=self.telemetryTransmit).start()
     threading.Thread(target=self.execute).start()
+
     threading.Thread(target=self.sensorData).start()
+    
+    threading.Thread(target=self.balance).start()
+    threading.Thread(target=self.gaitGen).start()
+    threading.Thread(target=self.comuterVision).start()
 
 def startBoot():
   simulation = Receiver('10.235.1.148',12345)
