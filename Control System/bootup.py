@@ -127,7 +127,7 @@ class Receiver:
     # threading.Thread(target=self.sensorData).start()
 
     # threading.Thread(target=self.balance).start()
-    # threading.Thread(target=self.gaitGen).start()
+    threading.Thread(target=self.gaitGen).start()
     # threading.Thread(target=self.comuterVision).start()
 
 def startBoot():
